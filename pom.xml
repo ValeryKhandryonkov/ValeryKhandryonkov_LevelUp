@@ -49,14 +49,14 @@
         <profile>
             <id>homework2-all-tests</id>
             <properties>
-                <test.classes>**/*Test.class</test.classes>
+                <test.classes>homework2/*Test.class</test.classes>
             </properties>
         </profile>
 
         <profile>
             <id>homework2-positive-tests</id>
             <properties>
-                <test.classes>**/*PositiveTest.class</test.classes>
+                <test.classes>homework2/*PositiveTest.class</test.classes>
             </properties>
         </profile>
 
@@ -66,7 +66,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <test.classes>**/*NegativeTest.class</test.classes>
+                <test.classes>homework2/*NegativeTest.class</test.classes>
             </properties>
         </profile>
     </profiles>
