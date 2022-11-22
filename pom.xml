@@ -19,6 +19,7 @@
 
         <maven-checkstyle-plugin.version>3.2.0</maven-checkstyle-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
+        <junit-platform-engine.version>1.9.1</junit-platform-engine.version>
     </properties>
 
     <dependencies>
@@ -30,12 +31,45 @@
         </dependency>
 
         <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <version>${junit-platform-engine.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj-core.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>homework2-all-tests</id>
+            <properties>
+                <test.classes>**/*Test.class</test.classes>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>homework2-positive-tests</id>
+            <properties>
+                <test.classes>**/*PositiveTest.class</test.classes>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>homework2-negative-tests</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <test.classes>**/*NegativeTest.class</test.classes>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -77,7 +111,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <skip>true</skip>
+                    <includes>
+                        <include>${test.classes}</include>
+                    </includes>
+                    <skip>false</skip>
                 </configuration>
             </plugin>
         </plugins>
