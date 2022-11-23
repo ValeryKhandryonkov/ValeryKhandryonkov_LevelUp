@@ -2,31 +2,30 @@ package ru.levelp.at.homework2;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 public class LuckyTicketPositiveTest {
-
     @ParameterizedTest
-    @ValueSource(strings = {"000000", "999999", "123141", "009333", "579849"})
+    @ValueSource(strings = {"000000", "999999", "123141", "009333", "579849", "101200", "333162", "755944"})
     void sumsOfTwoHalvesAreEqual(String input) {
         boolean expected = true;
         boolean actual = LuckyTicket.isLuckyTicket(input);
         assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    void sumsOfTwoHalvesAreNotEqual() {
-        String input = "111222";
+    @ParameterizedTest
+    @ValueSource(strings = {"111222", "123456", "999000", "665544", "010101", "800002", "789456", "159482"})
+    void sumsOfTwoHalvesAreNotEqual(String input) {
         boolean expected = false;
         boolean actual = LuckyTicket.isLuckyTicket(input);
         assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    void numberOfDigitsInTicketNumberIsNotSix() {
-        String input = "0";
+    @ParameterizedTest
+    @ValueSource(strings = {"1", "22", "333", "4444", "55555", "7777777", "88888888", "999999999", "0000000010",
+        "00000000011", "000000000012"})
+    void numberOfDigitsInTicketNumberIsNotSix(String input) {
         boolean expected = false;
         boolean actual = LuckyTicket.isLuckyTicket(input);
         assertThat(actual).isEqualTo(expected);
