@@ -3,6 +3,7 @@ package ru.levelp.at.homework2;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -13,6 +14,7 @@ public class LuckyTicketNegativeTest {
             "!@#$%^", "33333!", "100.0d", "555.66", "7777,2", "1.5e-10", "666-66", "0xFF");
     }
 
+    @Tag("Negative")
     @ParameterizedTest
     @MethodSource("nonDigitSymbolsDataProvider")
     void ticketNumberContainsNonDigitSymbols(String input) {
