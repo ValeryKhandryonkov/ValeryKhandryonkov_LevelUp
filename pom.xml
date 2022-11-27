@@ -84,6 +84,13 @@
                 <test.classes>homework2/NegativeTestsSuite.class</test.classes>
             </properties>
         </profile>
+
+        <profile>
+            <id>homework3-all-tests</id>
+            <properties>
+                <test.classes>homework3/*ExerciseTest.class</test.classes>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
