@@ -25,14 +25,4 @@ public class LuckyTicketPositiveTest {
         boolean actual = LuckyTicket.isLuckyTicket(input);
         assertThat(actual).isEqualTo(expected);
     }
-
-    @Tag("Positive")
-    @ParameterizedTest
-    @ValueSource(strings = {"1", "22", "333", "4444", "55555", "7777777", "88888888", "999999999", "0000000010",
-        "00000000011", "000000000012"})
-    void numberOfDigitsInTicketNumberIsNotSix(String input) {
-        boolean expected = false;
-        boolean actual = LuckyTicket.isLuckyTicket(input);
-        assertThat(actual).isEqualTo(expected);
-    }
 }
