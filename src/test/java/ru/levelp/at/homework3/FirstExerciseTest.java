@@ -24,6 +24,9 @@ public class FirstExerciseTest {
 
     private static final String SUBJECT = "FirstExercise - Тест";
     private static final String MESSAGE_TEXT = "FirstExercise. Текст для заполнения тела письма.";
+    private static final String LETTER_LIST_ITEM = "a.js-letter-list-item";
+    private static final String LEFT_MENU_DRAFTS = "[href='/drafts/?']";
+    private static final String LEFT_MENU_SENT = "[href='/sent/?']";
 
     @BeforeEach
     void setUp() {
@@ -76,10 +79,23 @@ public class FirstExerciseTest {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("button[title='Закрыть']"))).click();
 
         // Verify, что письмо сохранено в черновиках
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(LEFT_MENU_SENT))).click();
+        wait.until(ExpectedConditions.titleIs("Отправленные - Почта Mail.ru"));
+        int numberOfSentMessagesBeforeSendingDraft = wait.until(ExpectedConditions
+            .presenceOfAllElementsLocatedBy(By.cssSelector(LETTER_LIST_ITEM))).size();
+        System.out.println("Number of sent messages on the page before sending draft: "
+            + numberOfSentMessagesBeforeSendingDraft);
+
         wait.until(ExpectedConditions.visibilityOfElementLocated(By
-            .xpath("//*[contains(text(), 'Черновики')]"))).click();
+            .cssSelector(LEFT_MENU_DRAFTS))).click();
+        wait.until(ExpectedConditions.titleIs("Черновики - Почта Mail.ru"));
+
+        int numberOfDraftsBeforeSendingDraft = wait.until(ExpectedConditions
+            .presenceOfAllElementsLocatedBy(By.cssSelector(LETTER_LIST_ITEM))).size();
+        System.out.println("Number of drafts on the page before sending draft: " + numberOfDraftsBeforeSendingDraft);
+
         wait.until(ExpectedConditions.elementToBeClickable(By
-            .cssSelector("a.js-letter-list-item:nth-of-type(1)"))).click();
+            .cssSelector(LETTER_LIST_ITEM + ":nth-of-type(1)"))).click();
 
         // Verify контент, адресата и тему письма (должно совпадать с пунктом 3)
         var actualAddressee = wait.until(ExpectedConditions.visibilityOfElementLocated(By
@@ -95,14 +111,32 @@ public class FirstExerciseTest {
             .cssSelector("div.js-readmsg-msg > div > div > div > :first-child"))).getText();
         assertThat(actualMessageText).isEqualTo(MESSAGE_TEXT);
 
-        //    Отправить письмо
+        // Отправить письмо
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test-id='send']"))).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".button2_close"))).click();
 
-        //    Verify, что письмо исчезло из черновиков
+        // Verify, что письмо исчезло из черновиков
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By
+            .cssSelector(LEFT_MENU_DRAFTS))).click();
+        wait.until(ExpectedConditions.titleIs("Черновики - Почта Mail.ru"));
+        int numberOfDraftsAfterSendingDraft = wait.until(ExpectedConditions
+            .presenceOfAllElementsLocatedBy(By.cssSelector(LETTER_LIST_ITEM))).size();
+        System.out.println("Number of drafts on the page after sending draft: " + numberOfDraftsAfterSendingDraft);
+        assertThat(numberOfDraftsAfterSendingDraft).isEqualTo(numberOfDraftsBeforeSendingDraft - 1);
 
-        //    Verify, что письмо появилось в папке отправленные
+        // Verify, что письмо появилось в папке отправленные
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(LEFT_MENU_SENT))).click();
+        wait.until(ExpectedConditions.titleIs("Отправленные - Почта Mail.ru"));
+        int numberOfSentMessagesAfterSendingDraft = wait.until(ExpectedConditions
+            .presenceOfAllElementsLocatedBy(By.cssSelector(LETTER_LIST_ITEM))).size();
+        System.out.println("Number of sent messages on the page after sending draft: "
+            + numberOfSentMessagesAfterSendingDraft);
+        assertThat(numberOfSentMessagesAfterSendingDraft).isEqualTo(numberOfSentMessagesBeforeSendingDraft + 1);
 
-        //    Выйти из учётной записи
-
+        // Выйти из учётной записи
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("img.ph-avatar-img"))).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By
+            .cssSelector("[data-testid='whiteline-account-exit']"))).click();
     }
 
     @AfterEach
