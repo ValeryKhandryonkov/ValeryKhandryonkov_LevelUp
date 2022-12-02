@@ -19,12 +19,13 @@ public class FirstExerciseTest {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    protected static final String MAIL_RU_LOGIN = "v.khand@mail.ru";
-    protected static final String MAIL_RU_PASSWORD = "Very1secure1password";
+    private static final String MAIL_RU_LOGIN = "v.khand@mail.ru";
+    private static final String MAIL_RU_PASSWORD = "Very1secure1password";
 
     private static final String SUBJECT = "FirstExercise. Тема письма";
     private static final String MESSAGE_TEXT = "FirstExercise. Текст для заполнения тела письма.";
     private static final String LETTER_LIST_ITEM = "a.js-letter-list-item";
+    private static final String RIGHT_MENU = "img.ph-avatar-img";
     private static final String LEFT_MENU_DRAFTS = "[href='/drafts/?']";
     private static final String LEFT_MENU_SENT = "[href='/sent/?']";
     private static final String PAGE_TITLE_DRAFT = "Черновики - Почта Mail.ru";
@@ -33,7 +34,6 @@ public class FirstExerciseTest {
     @BeforeEach
     void setUp() {
         driver = new ChromeDriver();
-        driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofMillis(10000));
     }
 
@@ -57,14 +57,17 @@ public class FirstExerciseTest {
         passwordTextBox.sendKeys(MAIL_RU_PASSWORD);
         passwordTextBox.sendKeys(Keys.ENTER);
 
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".ph-project-promo-close-icon")))
+            .click();
+
         // 2. Assert, что вход выполнен успешно
         String actualUserLogin = wait.until(ExpectedConditions
-            .visibilityOfElementLocated(By.cssSelector("img.ph-avatar-img"))).getAttribute("alt");
+            .visibilityOfElementLocated(By.cssSelector(RIGHT_MENU))).getAttribute("alt");
         assertThat(actualUserLogin).isEqualTo(MAIL_RU_LOGIN);
 
         // 3. Создать новое письмо (заполнить адресата, тему письма и тело)
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a.compose-button")))
-            .sendKeys("n");
+            .click();
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By
             .xpath("//div[@data-type='to']//input"))).sendKeys(MAIL_RU_LOGIN);
@@ -81,15 +84,13 @@ public class FirstExerciseTest {
         // 5. Verify, что письмо сохранено в черновиках
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(LEFT_MENU_SENT))).click();
         wait.until(ExpectedConditions.titleIs(PAGE_TITLE_SENT));
-        int sentMessagesBefore = wait.until(ExpectedConditions
+        final int sentMessagesBefore = wait.until(ExpectedConditions
             .presenceOfAllElementsLocatedBy(By.cssSelector(LETTER_LIST_ITEM))).size();
-        System.out.println("Sent messages before: " + sentMessagesBefore);
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(LEFT_MENU_DRAFTS))).click();
         wait.until(ExpectedConditions.titleIs(PAGE_TITLE_DRAFT));
-        int draftMessagesBefore = wait.until(ExpectedConditions
+        final int draftMessagesBefore = wait.until(ExpectedConditions
             .presenceOfAllElementsLocatedBy(By.cssSelector(LETTER_LIST_ITEM))).size();
-        System.out.println("Draft messages before: " + draftMessagesBefore);
 
         // 6. Verify контент, адресата и тему письма (должно совпадать с пунктом 3)
         wait.until(ExpectedConditions.elementToBeClickable(By
@@ -116,21 +117,15 @@ public class FirstExerciseTest {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By
             .cssSelector(LEFT_MENU_DRAFTS))).click();
         wait.until(ExpectedConditions.titleIs(PAGE_TITLE_DRAFT));
-        int draftMessagesAfter = wait.until(ExpectedConditions
-            .presenceOfAllElementsLocatedBy(By.cssSelector(LETTER_LIST_ITEM))).size();
-        System.out.println("Draft messages after: " + draftMessagesAfter);
-        assertThat(draftMessagesAfter).isEqualTo(draftMessagesBefore - 1);
+        wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(LETTER_LIST_ITEM), draftMessagesBefore - 1));
 
         // 9. Verify, что письмо появилось в папке отправленные
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(LEFT_MENU_SENT))).click();
         wait.until(ExpectedConditions.titleIs(PAGE_TITLE_SENT));
-        int sentMessagesAfter = wait.until(ExpectedConditions
-            .presenceOfAllElementsLocatedBy(By.cssSelector(LETTER_LIST_ITEM))).size();
-        System.out.println("Sent messages after: " + sentMessagesAfter);
-        assertThat(sentMessagesAfter).isEqualTo(sentMessagesBefore + 1);
+        wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector(LETTER_LIST_ITEM), sentMessagesBefore + 1));
 
         // 10. Выйти из учётной записи
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("img.ph-avatar-img"))).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(RIGHT_MENU))).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By
             .cssSelector("[data-testid='whiteline-account-exit']"))).click();
     }
