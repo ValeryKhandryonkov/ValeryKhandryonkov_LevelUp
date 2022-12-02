@@ -34,6 +34,7 @@ public class FirstExerciseTest {
     @BeforeEach
     void setUp() {
         driver = new ChromeDriver();
+        driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofMillis(10000));
     }
 
