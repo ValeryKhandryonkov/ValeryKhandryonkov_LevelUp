@@ -91,6 +91,13 @@
                 <test.classes>homework3/*ExerciseTest.class</test.classes>
             </properties>
         </profile>
+
+        <profile>
+            <id>homework4-all-tests</id>
+            <properties>
+                <test.classes>homework4/*PageObjectTest.class</test.classes>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
