@@ -14,9 +14,11 @@ public class MainPage {
 
     private final WebDriverWait wait;
 
+    private static final String PAGE_TITLE_INBOX = "Входящие - Почта Mail.ru";
     private static final String PAGE_TITLE_SENT = "Отправленные - Почта Mail.ru";
     private static final String PAGE_TITLE_DRAFT = "Черновики - Почта Mail.ru";
     private static final String PAGE_TITLE_TEST = "Тест - Почта Mail.ru";
+    private static final String PAGE_TITLE_TRASH = "Корзина - Почта Mail.ru";
     private static final String LETTER_LIST_ITEM = "a.js-letter-list-item";
 
     @FindBy(css = ".ph-project-promo-close-icon")
@@ -43,14 +45,23 @@ public class MainPage {
     @FindBy(css = "button[title='Закрыть']")
     private WebElement composeLetterCloseButton;
 
+    @FindBy(css = "[href='/inbox/?']")
+    private WebElement leftMenuInboxButton;
+
+    @FindBy(css = "[href='/1/?']")
+    private WebElement leftMenuTestButton;
+
     @FindBy(css = "[href='/sent/?']")
     private WebElement leftMenuSentButton;
 
-    @FindBy(css = LETTER_LIST_ITEM)
-    private List<WebElement> listOfLetters;
-
     @FindBy(css = "[href='/drafts/?']")
     private WebElement leftMenuDraftsButton;
+
+    @FindBy(css = "[href='/trash/?']")
+    private WebElement leftMenuTrashButton;
+
+    @FindBy(css = LETTER_LIST_ITEM)
+    private List<WebElement> listOfLetters;
 
     @FindBy(css = "a.js-letter-list-item:nth-of-type(1)")
     private WebElement firstLetterInListOfLetters;
@@ -79,8 +90,8 @@ public class MainPage {
     @FindBy(css = "[data-testid='whiteline-account-exit']")
     private WebElement logoutButton;
 
-    @FindBy(css = "[href='/1/?']")
-    private WebElement leftMenuTestButton;
+    @FindBy(css = ".button2_delete")
+    private WebElement deleteButton;
 
     public MainPage(WebDriver driver) {
         this.wait = new WebDriverWait(driver, Duration.ofMillis(10000));
@@ -130,6 +141,16 @@ public class MainPage {
         wait.until(ExpectedConditions.titleContains(PAGE_TITLE_TEST));
     }
 
+    public void clickLeftMenuInboxButton() {
+        wait.until(ExpectedConditions.visibilityOf(leftMenuInboxButton)).click();
+        wait.until(ExpectedConditions.titleContains(PAGE_TITLE_INBOX));
+    }
+
+    public void clickLeftMenuTrashButton() {
+        wait.until(ExpectedConditions.visibilityOf(leftMenuTrashButton)).click();
+        wait.until(ExpectedConditions.titleContains(PAGE_TITLE_TRASH));
+    }
+
     public void clickOnFirstLetterInListOfLetters() {
         wait.until(ExpectedConditions.elementToBeClickable(firstLetterInListOfLetters)).click();
     }
@@ -148,6 +169,10 @@ public class MainPage {
 
     public void clickLogoutButton() {
         wait.until(ExpectedConditions.visibilityOf(logoutButton)).click();
+    }
+
+    public void clickDeleteButton() {
+        wait.until(ExpectedConditions.visibilityOf(deleteButton)).click();
     }
 
     public int getListOfLettersCount() {
