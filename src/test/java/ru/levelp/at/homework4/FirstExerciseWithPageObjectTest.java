@@ -22,8 +22,6 @@ public class FirstExerciseWithPageObjectTest extends BaseSeleniumTest {
         loginRegistrationPage.open();
         loginRegistrationPage.clickOnLoginButton();
 
-        loginRegistrationPage.switchToLoginIntoAccountFrame();
-
         loginRegistrationPage.enterUsernameToUsernameField(MAIL_RU_LOGIN);
         loginRegistrationPage.sendEnterKeyToUsernameField();
 

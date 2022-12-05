@@ -40,9 +40,6 @@ public class LoginRegistrationPage {
 
     public void clickOnLoginButton() {
         wait.until(ExpectedConditions.visibilityOf(loginButton)).click();
-    }
-
-    public void switchToLoginIntoAccountFrame() {
         driver.switchTo().frame(loginIntoAccountFrame);
     }
 
