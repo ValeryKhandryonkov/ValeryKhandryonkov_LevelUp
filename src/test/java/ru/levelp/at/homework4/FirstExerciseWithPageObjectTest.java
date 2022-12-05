@@ -58,7 +58,7 @@ public class FirstExerciseWithPageObjectTest extends BaseSeleniumTest {
 
         assertThat(mainPage.getDraftActualAddressee()).isEqualTo(MAIL_RU_LOGIN);
         assertThat(mainPage.getDraftActualSubject()).isEqualTo(SUBJECT);
-        assertThat(mainPage.getDraftActualMessageText()).isEqualTo(MESSAGE_TEXT);
+        assertThat(mainPage.getActualMessageText()).isEqualTo(MESSAGE_TEXT);
 
         // 7. Отправить письмо
         mainPage.clickSendButton();

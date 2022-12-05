@@ -12,11 +12,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class MainPage {
 
-    private final WebDriver driver;
     private final WebDriverWait wait;
 
     private static final String PAGE_TITLE_SENT = "Отправленные - Почта Mail.ru";
     private static final String PAGE_TITLE_DRAFT = "Черновики - Почта Mail.ru";
+    private static final String PAGE_TITLE_TEST = "Тест - Почта Mail.ru";
     private static final String LETTER_LIST_ITEM = "a.js-letter-list-item";
 
     @FindBy(css = ".ph-project-promo-close-icon")
@@ -55,14 +55,20 @@ public class MainPage {
     @FindBy(css = "a.js-letter-list-item:nth-of-type(1)")
     private WebElement firstLetterInListOfLetters;
 
+    @FindBy(css = ".letter__recipients > .letter-contact")
+    private WebElement actualAddressee;
+
+    @FindBy(css = "h2.thread-subject")
+    private WebElement actualSubject;
+
+    @FindBy(css = "div.js-readmsg-msg > div > div > div > :first-child")
+    private WebElement actualMessageText;
+
     @FindBy(xpath = "//div[@data-type='to']//span[contains(@class, 'text')]")
     private WebElement draftActualAddressee;
 
     @FindBy(xpath = "//div[contains(@class, 'compose-app_window')]//input[@name='Subject']")
     private WebElement draftActualSubject;
-
-    @FindBy(css = "div.js-readmsg-msg > div > div > div > :first-child")
-    private WebElement draftActualMessageText;
 
     @FindBy(css = "[data-test-id='send']")
     private WebElement sendButton;
@@ -73,18 +79,16 @@ public class MainPage {
     @FindBy(css = "[data-testid='whiteline-account-exit']")
     private WebElement logoutButton;
 
+    @FindBy(css = "[href='/1/?']")
+    private WebElement leftMenuTestButton;
+
     public MainPage(WebDriver driver) {
-        this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofMillis(10000));
         PageFactory.initElements(driver, this);
     }
 
     public void closePromoPopup() {
         wait.until(ExpectedConditions.visibilityOf(promoPopupCloseButton)).click();
-    }
-
-    public String getActualUsername() {
-        return rightMenuButton.getAttribute("alt");
     }
 
     public void clickComposeLetterButton() {
@@ -116,29 +120,18 @@ public class MainPage {
         wait.until(ExpectedConditions.titleIs(PAGE_TITLE_SENT));
     }
 
-    public int getListOfLettersCount() {
-        return listOfLetters.size();
-    }
-
     public void clickLeftMenuDraftsButton() {
         wait.until(ExpectedConditions.visibilityOf(leftMenuDraftsButton)).click();
         wait.until(ExpectedConditions.titleIs(PAGE_TITLE_DRAFT));
     }
 
+    public void clickLeftMenuTestButton() {
+        wait.until(ExpectedConditions.visibilityOf(leftMenuTestButton)).click();
+        wait.until(ExpectedConditions.titleContains(PAGE_TITLE_TEST));
+    }
+
     public void clickOnFirstLetterInListOfLetters() {
         wait.until(ExpectedConditions.elementToBeClickable(firstLetterInListOfLetters)).click();
-    }
-
-    public String getDraftActualAddressee() {
-        return wait.until(ExpectedConditions.visibilityOf(draftActualAddressee)).getText();
-    }
-
-    public String getDraftActualSubject() {
-        return wait.until(ExpectedConditions.visibilityOf(draftActualSubject)).getAttribute("value");
-    }
-
-    public String getDraftActualMessageText() {
-        return wait.until(ExpectedConditions.visibilityOf(draftActualMessageText)).getText();
     }
 
     public void clickSendButton() {
@@ -155,6 +148,34 @@ public class MainPage {
 
     public void clickLogoutButton() {
         wait.until(ExpectedConditions.visibilityOf(logoutButton)).click();
+    }
+
+    public int getListOfLettersCount() {
+        return listOfLetters.size();
+    }
+
+    public String getActualUsername() {
+        return rightMenuButton.getAttribute("alt");
+    }
+
+    public String getDraftActualAddressee() {
+        return wait.until(ExpectedConditions.visibilityOf(draftActualAddressee)).getText();
+    }
+
+    public String getActualAddressee() {
+        return wait.until(ExpectedConditions.visibilityOf(actualAddressee)).getAttribute("title");
+    }
+
+    public String getDraftActualSubject() {
+        return wait.until(ExpectedConditions.visibilityOf(draftActualSubject)).getAttribute("value");
+    }
+
+    public String getActualSubject() {
+        return wait.until(ExpectedConditions.visibilityOf(actualSubject)).getText();
+    }
+
+    public String getActualMessageText() {
+        return wait.until(ExpectedConditions.visibilityOf(actualMessageText)).getText();
     }
 
     public void waitUntilNumberOfLettersDecreaseByOne(int numberOfLettersBefore) {
