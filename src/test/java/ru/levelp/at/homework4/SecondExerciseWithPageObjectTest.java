@@ -7,9 +7,6 @@ import org.openqa.selenium.support.PageFactory;
 
 public class SecondExerciseWithPageObjectTest extends BaseSeleniumTest {
 
-    protected static final String MAIL_RU_LOGIN = "v.khand@mail.ru";
-    protected static final String MAIL_RU_PASSWORD = "Very1secure1password";
-
     private static final String SUBJECT = "SecondExercise. Тема письма - Тест";
     private static final String MESSAGE_TEXT = "SecondExercise. Текст для заполнения тела письма.";
 

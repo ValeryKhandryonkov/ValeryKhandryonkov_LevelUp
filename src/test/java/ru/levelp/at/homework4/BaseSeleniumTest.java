@@ -12,6 +12,10 @@ public abstract class BaseSeleniumTest {
     protected WebDriver driver;
     protected WebDriverWait wait;
 
+    private static final GetUserCredentials userCredentials = new GetUserCredentials();
+    protected static final String MAIL_RU_LOGIN = userCredentials.getCredentialByKey("user1_login");
+    protected static final String MAIL_RU_PASSWORD = userCredentials.getCredentialByKey("user1_password");
+
     @BeforeEach
     void setUp() {
         driver = new ChromeDriver();
