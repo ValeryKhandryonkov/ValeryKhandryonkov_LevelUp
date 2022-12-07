@@ -2,42 +2,18 @@ package ru.levelp.at.homework3;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import java.time.Duration;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 
-public class SecondExerciseTest {
-    private WebDriver driver;
-    private WebDriverWait wait;
-
-    protected static final String MAIL_RU_LOGIN = "v.khand@mail.ru";
-    protected static final String MAIL_RU_PASSWORD = "Very1secure1password";
+public class SecondExerciseTest extends BaseSeleniumTest {
 
     private static final String SUBJECT = "SecondExercise. Тема письма - Тест";
     private static final String MESSAGE_TEXT = "SecondExercise. Текст для заполнения тела письма.";
-    private static final String LETTER_LIST_ITEM = "a.js-letter-list-item";
-    private static final String RIGHT_MENU = "img.ph-avatar-img";
-    private static final String LEFT_MENU_SENT = "[href='/sent/?']";
-    private static final String LEFT_MENU_TEST = "[href='/1/?']";
-    private static final String PAGE_TITLE_SENT = "Отправленные - Почта Mail.ru";
-    private static final String PAGE_TITLE_TEST = "Тест - Почта Mail.ru";
-
-    @BeforeEach
-    void setUp() {
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        wait = new WebDriverWait(driver, Duration.ofMillis(10000));
-    }
 
     @Test
     void sendNewMessageForTestFolder() {
@@ -122,10 +98,5 @@ public class SecondExerciseTest {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(RIGHT_MENU))).click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By
             .cssSelector("[data-testid='whiteline-account-exit']"))).click();
-    }
-
-    @AfterEach
-    void tearDown() {
-        driver.quit();
     }
 }
