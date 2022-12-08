@@ -50,8 +50,7 @@ public class ThirdExerciseWithPageObjectTest extends BaseSeleniumTest {
         mainPage.clickLetterSentCloseButton();
 
         // 5. Verify, что письмо появилось в папке Входящие
-        mainPage.clickLeftMenuInboxButton();
-        mainPage.waitUntilNumberOfLettersIncreaseByOne(receivedMessagesBefore);
+        mainPage.clickLeftMenuInboxButtonAndWaitForNumberOfLettersIncreaseByOne(receivedMessagesBefore);
 
         // 6. Verify контент, адресата и тему письма (должно совпадать с пунктом 3)
         mainPage.clickOnFirstLetterInListOfLetters();
@@ -64,8 +63,7 @@ public class ThirdExerciseWithPageObjectTest extends BaseSeleniumTest {
         mainPage.clickDeleteButton();
 
         // 8. Verify что письмо появилось в папке Корзина
-        mainPage.clickLeftMenuTrashButton();
-        mainPage.waitUntilNumberOfLettersIncreaseByOne(deletedMessagesBefore);
+        mainPage.clickLeftMenuTrashButtonAndWaitForNumberOfLettersIncreaseByOne(deletedMessagesBefore);
 
         // 9. Выйти из учётной записи
         mainPage.clickRightMenuButton();

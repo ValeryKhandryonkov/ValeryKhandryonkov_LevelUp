@@ -62,12 +62,10 @@ public class FirstExerciseWithPageObjectTest extends BaseSeleniumTest {
         mainPage.clickLetterSentCloseButton();
 
         // 8. Verify, что письмо исчезло из черновиков
-        mainPage.clickLeftMenuDraftsButton();
-        mainPage.waitUntilNumberOfLettersDecreaseByOne(draftMessagesBefore);
+        mainPage.clickLeftMenuDraftsButtonAndWaitForNumberOfLettersDecreaseByOne(draftMessagesBefore);
 
         // 9. Verify, что письмо появилось в папке отправленные
-        mainPage.clickLeftMenuSentButton();
-        mainPage.waitUntilNumberOfLettersIncreaseByOne(sentMessagesBefore);
+        mainPage.clickLeftMenuSentButtonAndWaitForNumberOfLettersIncreaseByOne(sentMessagesBefore);
 
         // 10. Выйти из учётной записи
         mainPage.clickRightMenuButton();

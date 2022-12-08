@@ -131,9 +131,23 @@ public class MainPage {
         wait.until(ExpectedConditions.titleIs(PAGE_TITLE_SENT));
     }
 
+    public void clickLeftMenuSentButtonAndWaitForNumberOfLettersIncreaseByOne(int numberOfLettersBefore) {
+        wait.until(ExpectedConditions.visibilityOf(leftMenuSentButton)).click();
+        wait.until(ExpectedConditions.titleIs(PAGE_TITLE_SENT));
+        wait.until(ExpectedConditions.numberOfElementsToBe(By
+            .cssSelector(LETTER_LIST_ITEM), numberOfLettersBefore + 1));
+    }
+
     public void clickLeftMenuDraftsButton() {
         wait.until(ExpectedConditions.visibilityOf(leftMenuDraftsButton)).click();
         wait.until(ExpectedConditions.titleIs(PAGE_TITLE_DRAFT));
+    }
+
+    public void clickLeftMenuDraftsButtonAndWaitForNumberOfLettersDecreaseByOne(int numberOfLettersBefore) {
+        wait.until(ExpectedConditions.visibilityOf(leftMenuDraftsButton)).click();
+        wait.until(ExpectedConditions.titleIs(PAGE_TITLE_DRAFT));
+        wait.until(ExpectedConditions.numberOfElementsToBe(By
+            .cssSelector(LETTER_LIST_ITEM), numberOfLettersBefore - 1));
     }
 
     public void clickLeftMenuTestButton() {
@@ -141,14 +155,35 @@ public class MainPage {
         wait.until(ExpectedConditions.titleContains(PAGE_TITLE_TEST));
     }
 
+    public void clickLeftMenuTestButtonAndWaitForNumberOfLettersIncreaseByOne(int numberOfLettersBefore) {
+        wait.until(ExpectedConditions.visibilityOf(leftMenuTestButton)).click();
+        wait.until(ExpectedConditions.titleContains(PAGE_TITLE_TEST));
+        wait.until(ExpectedConditions.numberOfElementsToBe(By
+            .cssSelector(LETTER_LIST_ITEM), numberOfLettersBefore + 1));
+    }
+
     public void clickLeftMenuInboxButton() {
         wait.until(ExpectedConditions.visibilityOf(leftMenuInboxButton)).click();
         wait.until(ExpectedConditions.titleContains(PAGE_TITLE_INBOX));
     }
 
+    public void clickLeftMenuInboxButtonAndWaitForNumberOfLettersIncreaseByOne(int numberOfLettersBefore) {
+        wait.until(ExpectedConditions.visibilityOf(leftMenuInboxButton)).click();
+        wait.until(ExpectedConditions.titleContains(PAGE_TITLE_INBOX));
+        wait.until(ExpectedConditions.numberOfElementsToBe(By
+            .cssSelector(LETTER_LIST_ITEM), numberOfLettersBefore + 1));
+    }
+
     public void clickLeftMenuTrashButton() {
         wait.until(ExpectedConditions.visibilityOf(leftMenuTrashButton)).click();
         wait.until(ExpectedConditions.titleContains(PAGE_TITLE_TRASH));
+    }
+
+    public void clickLeftMenuTrashButtonAndWaitForNumberOfLettersIncreaseByOne(int numberOfLettersBefore) {
+        wait.until(ExpectedConditions.visibilityOf(leftMenuTrashButton)).click();
+        wait.until(ExpectedConditions.titleContains(PAGE_TITLE_TRASH));
+        wait.until(ExpectedConditions.numberOfElementsToBe(By
+            .cssSelector(LETTER_LIST_ITEM), numberOfLettersBefore + 1));
     }
 
     public void clickOnFirstLetterInListOfLetters() {
@@ -201,15 +236,5 @@ public class MainPage {
 
     public String getActualMessageText() {
         return wait.until(ExpectedConditions.visibilityOf(actualMessageText)).getText();
-    }
-
-    public void waitUntilNumberOfLettersDecreaseByOne(int numberOfLettersBefore) {
-        wait.until(ExpectedConditions.numberOfElementsToBe(By
-            .cssSelector(LETTER_LIST_ITEM), numberOfLettersBefore - 1));
-    }
-
-    public void waitUntilNumberOfLettersIncreaseByOne(int numberOfLettersBefore) {
-        wait.until(ExpectedConditions.numberOfElementsToBe(By
-            .cssSelector(LETTER_LIST_ITEM), numberOfLettersBefore + 1));
     }
 }

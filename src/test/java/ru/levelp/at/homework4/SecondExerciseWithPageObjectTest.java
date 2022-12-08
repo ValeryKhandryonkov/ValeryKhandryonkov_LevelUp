@@ -50,12 +50,10 @@ public class SecondExerciseWithPageObjectTest extends BaseSeleniumTest {
         mainPage.clickLetterSentCloseButton();
 
         // 5. Verify, что письмо появилось в папке отправленные
-        mainPage.clickLeftMenuSentButton();
-        mainPage.waitUntilNumberOfLettersIncreaseByOne(sentMessagesBefore);
+        mainPage.clickLeftMenuSentButtonAndWaitForNumberOfLettersIncreaseByOne(sentMessagesBefore);
 
         // 6. Verify, что письмо появилось в папке «Тест»
-        mainPage.clickLeftMenuTestButton();
-        mainPage.waitUntilNumberOfLettersIncreaseByOne(testMessagesBefore);
+        mainPage.clickLeftMenuTestButtonAndWaitForNumberOfLettersIncreaseByOne(testMessagesBefore);
 
         // 7. Verify контент, адресата и тему письма (должно совпадать с пунктом 3)
         mainPage.clickOnFirstLetterInListOfLetters();
