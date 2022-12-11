@@ -27,7 +27,7 @@ public class FirstExerciseWithStepsTest extends BaseSeleniumTest {
         final int draftMessagesBefore = actionStep.getListOfDraftLettersCount();
 
         // 6. Verify контент, адресата и тему письма (должно совпадать с пунктом 3)
-        assertionStep.checkSavedMessageAddresseeSubjectAndText(MAIL_RU_LOGIN, SUBJECT, MESSAGE_TEXT);
+        assertionStep.checkDraftMessageAddresseeSubjectAndText(MAIL_RU_LOGIN, SUBJECT, MESSAGE_TEXT);
 
         // 7. Отправить письмо
         actionStep.sendLetter();

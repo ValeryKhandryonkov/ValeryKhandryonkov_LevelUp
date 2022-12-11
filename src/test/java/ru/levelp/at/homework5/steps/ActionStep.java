@@ -1,9 +1,6 @@
 package ru.levelp.at.homework5.steps;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.PageFactory;
-import ru.levelp.at.homework5.LoginRegistrationPage;
-import ru.levelp.at.homework5.MainPage;
 
 public class ActionStep extends BaseStep {
 
@@ -12,7 +9,6 @@ public class ActionStep extends BaseStep {
     }
 
     public void loginToMailRuService(String login, String password) {
-        ru.levelp.at.homework5.LoginRegistrationPage loginRegistrationPage = new LoginRegistrationPage(driver);
 
         loginRegistrationPage.open();
         loginRegistrationPage.clickOnLoginButton();
@@ -22,8 +18,6 @@ public class ActionStep extends BaseStep {
 
         loginRegistrationPage.enterPasswordToPasswordField(password);
         loginRegistrationPage.sendEnterKeyToPasswordField();
-
-        MainPage mainPage = PageFactory.initElements(driver, MainPage.class);
 
         mainPage.closePromoPopup();
     }
@@ -66,5 +60,14 @@ public class ActionStep extends BaseStep {
 
     public void verifyNumberOfSentLettersIncreaseByOne(int numberOfLettersBefore) {
         mainPage.clickLeftMenuSentButtonAndWaitForNumberOfLettersIncreaseByOne(numberOfLettersBefore);
+    }
+
+    public int getListOfTestLettersCount() {
+        mainPage.clickLeftMenuTestButton();
+        return mainPage.getListOfLettersCount();
+    }
+
+    public void verifyNumberOfTestLettersIncreaseByOne(int numberOfLettersBefore) {
+        mainPage.clickLeftMenuTestButtonAndWaitForNumberOfLettersIncreaseByOne(numberOfLettersBefore);
     }
 }

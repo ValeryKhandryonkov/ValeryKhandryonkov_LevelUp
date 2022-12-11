@@ -14,10 +14,17 @@ public class AssertionStep extends BaseStep {
         assertThat(mainPage.getActualUsername()).isEqualTo(login);
     }
 
-    public void checkSavedMessageAddresseeSubjectAndText(String addressee, String subject, String text) {
+    public void checkDraftMessageAddresseeSubjectAndText(String addressee, String subject, String text) {
         mainPage.clickOnFirstLetterInListOfLetters();
         assertThat(mainPage.getDraftActualAddressee()).isEqualTo(addressee);
         assertThat(mainPage.getDraftActualSubject()).isEqualTo(subject);
+        assertThat(mainPage.getActualMessageText()).isEqualTo(text);
+    }
+
+    public void checkSentOrReceivedMessageAddresseeSubjectAndText(String addressee, String subject, String text) {
+        mainPage.clickOnFirstLetterInListOfLetters();
+        assertThat(mainPage.getActualAddressee()).isEqualTo(addressee);
+        assertThat(mainPage.getActualSubject()).isEqualTo(subject);
         assertThat(mainPage.getActualMessageText()).isEqualTo(text);
     }
 }
