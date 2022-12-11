@@ -54,6 +54,21 @@ public class ActionStep extends BaseStep {
         return mainPage.getListOfLettersCount();
     }
 
+    public int getListOfTestLettersCount() {
+        mainPage.clickLeftMenuTestButton();
+        return mainPage.getListOfLettersCount();
+    }
+
+    public int getListOfReceivedLettersCount() {
+        mainPage.clickLeftMenuInboxButton();
+        return mainPage.getListOfLettersCount();
+    }
+
+    public int getListOfDeletedLettersCount() {
+        mainPage.clickLeftMenuTrashButton();
+        return mainPage.getListOfLettersCount();
+    }
+
     public void verifyNumberOfDraftLettersDecreaseByOne(int numberOfLettersBefore) {
         mainPage.clickLeftMenuDraftsButtonAndWaitForNumberOfLettersDecreaseByOne(numberOfLettersBefore);
     }
@@ -62,12 +77,19 @@ public class ActionStep extends BaseStep {
         mainPage.clickLeftMenuSentButtonAndWaitForNumberOfLettersIncreaseByOne(numberOfLettersBefore);
     }
 
-    public int getListOfTestLettersCount() {
-        mainPage.clickLeftMenuTestButton();
-        return mainPage.getListOfLettersCount();
-    }
-
     public void verifyNumberOfTestLettersIncreaseByOne(int numberOfLettersBefore) {
         mainPage.clickLeftMenuTestButtonAndWaitForNumberOfLettersIncreaseByOne(numberOfLettersBefore);
+    }
+
+    public void verifyNumberOfReceivedLettersIncreaseByOne(int numberOfLettersBefore) {
+        mainPage.clickLeftMenuInboxButtonAndWaitForNumberOfLettersIncreaseByOne(numberOfLettersBefore);
+    }
+
+    public void verifyNumberOfDeletedLettersIncreaseByOne(int numberOfLettersBefore) {
+        mainPage.clickLeftMenuTrashButtonAndWaitForNumberOfLettersIncreaseByOne(numberOfLettersBefore);
+    }
+
+    public void deleteLetter() {
+        mainPage.clickDeleteButton();
     }
 }
