@@ -1,18 +1,13 @@
 package ru.levelp.at.homework4;
 
-import java.time.Duration;
 import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class MainPage {
-
-    private final WebDriverWait wait;
+public class MainPage extends BasePage {
 
     private static final String PAGE_TITLE_INBOX = "Входящие - Почта Mail.ru";
     private static final String PAGE_TITLE_SENT = "Отправленные - Почта Mail.ru";
@@ -94,8 +89,7 @@ public class MainPage {
     private WebElement deleteButton;
 
     public MainPage(WebDriver driver) {
-        this.wait = new WebDriverWait(driver, Duration.ofMillis(10000));
-        PageFactory.initElements(driver, this);
+        super(driver);
     }
 
     public void closePromoPopup() {

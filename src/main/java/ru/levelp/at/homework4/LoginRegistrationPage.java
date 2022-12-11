@@ -1,20 +1,14 @@
 package ru.levelp.at.homework4;
 
-import java.time.Duration;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class LoginRegistrationPage {
+public class LoginRegistrationPage extends BasePage {
 
     private static final String MAIL_RU_URL = "https://mail.ru/";
-
-    private final WebDriver driver;
-    private final WebDriverWait wait;
 
     @FindBy(css = "[data-testid='enter-mail-primary']")
     private WebElement loginButton;
@@ -29,9 +23,7 @@ public class LoginRegistrationPage {
     private WebElement passwordField;
 
     public LoginRegistrationPage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofMillis(10000));
-        PageFactory.initElements(driver, this);
+        super(driver);
     }
 
     public void open() {
