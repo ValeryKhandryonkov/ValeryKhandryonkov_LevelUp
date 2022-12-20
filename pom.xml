@@ -98,6 +98,13 @@
                 <test.classes>homework4/*PageObjectTest.class</test.classes>
             </properties>
         </profile>
+
+        <profile>
+            <id>homework5-all-tests</id>
+            <properties>
+                <test.classes>homework5/*WithStepsTest.class</test.classes>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
