@@ -42,4 +42,20 @@ public class UsersRequest {
             .get(USERS_ENDPOINT)
             .andReturn();
     }
+
+    public Response getUserById(int id) {
+        return given()
+            .spec(requestSpecification)
+            .when()
+            .get(USERS_ENDPOINT + "/" + id)
+            .andReturn();
+    }
+
+    public Response deleteUserById(int id) {
+        return given()
+            .spec(requestSpecification)
+            .when()
+            .delete(USERS_ENDPOINT + "/" + id)
+            .andReturn();
+    }
 }

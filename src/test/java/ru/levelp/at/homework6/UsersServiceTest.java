@@ -10,6 +10,8 @@ import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -28,12 +30,7 @@ class UsersServiceTest {
 
     static Stream<Arguments> userParametersDataProvider() {
 
-        var users = new UsersRequest(requestSpecification())
-            .getUsers()
-            .then()
-            .spec(responseSpecificationForOkResponse())
-            .extract()
-            .as(UserData[].class);
+        var users = getUsers();
 
         return Stream.of(
             Arguments.of(Map.of("name", users[new Random().nextInt(5)].getName())),
@@ -41,6 +38,27 @@ class UsersServiceTest {
             Arguments.of(Map.of("gender", Genders.values()[new Random().nextInt(Genders.values().length)].toString())),
             Arguments.of(Map.of("status", Statuses.values()[new Random().nextInt(Statuses.values().length)].toString()))
         );
+    }
+
+    @Test
+    void testTest() {
+        var users = getUsers();
+        List<String> userIds = new ArrayList<>();
+        for (UserData user : users) {
+            userIds.add(Integer.toString(user.getId()));
+        }
+        System.out.println(userIds.getClass());
+        System.out.println(userIds.get(0).getClass());
+    }
+
+    static Stream<Integer> userIdDataProvider() {
+        var users = getUsers();
+        List<Integer> userIds = new ArrayList<>();
+        for (UserData user : users) {
+            userIds.add(user.getId());
+        }
+
+        return Stream.of(userIds.get(0), userIds.get(1), userIds.get(2));
     }
 
     static Stream<Arguments> parametersForCreatingUsersDataProvider() {
@@ -67,13 +85,20 @@ class UsersServiceTest {
         );
     }
 
-    private UserData[] getUsersByParameters(Map<String, String> params) {
+    private static UserData[] getUsers() {
+        return new UsersRequest(requestSpecification())
+            .getUsers()
+            .then()
+            .spec(responseSpecificationForOkResponse())
+            .extract()
+            .as(UserData[].class);
+    }
 
+    private UserData[] getUsersByParameters(Map<String, String> params) {
         return new UsersRequest(requestSpecification())
             .getUsersByParameters(params)
             .then()
             .spec(responseSpecificationForOkResponse())
-            .statusCode(200)
             .extract()
             .as(UserData[].class);
     }
@@ -120,15 +145,12 @@ class UsersServiceTest {
         if (parameters.containsKey("name")) {
             var rsBody = getUsersByParameters(parameters);
             assertThat(rsBody[0].getName()).isEqualTo(parameters.get("name"));
-
         } else if (parameters.containsKey("email")) {
             var rsBody = getUsersByParameters(parameters);
             assertThat(rsBody[0].getEmail()).isEqualTo(parameters.get("email"));
-
         } else if (parameters.containsKey("gender")) {
             var rsBody = getUsersByParameters(parameters);
             assertThat(rsBody).extracting(UserData::getGender).containsOnly(parameters.get("gender"));
-
         } else if (parameters.containsKey("status")) {
             var rsBody = getUsersByParameters(parameters);
             assertThat(rsBody).extracting(UserData::getStatus).containsOnly(parameters.get("status"));
@@ -136,14 +158,28 @@ class UsersServiceTest {
     }
 
     @ParameterizedTest
+    @MethodSource("userIdDataProvider")
+    void getUserById(int id) {
+        var rsBody = new UsersRequest(requestSpecification())
+            .getUserById(id)
+            .then()
+            .spec(responseSpecificationForOkResponse())
+            .statusCode(200)
+            .extract()
+            .as(UserData.class);
+
+        assertThat(rsBody.getId()).isEqualTo(id);
+    }
+
+    @ParameterizedTest
     @MethodSource("parametersForCreatingUsersDataProvider")
     void createUserTest(String name, String email, String gender, String status) {
         var rqBody = CreateUserDataRequest.builder()
-            .name(name)
-            .email(email)
-            .gender(gender)
-            .status(status)
-            .build();
+                                          .name(name)
+                                          .email(email)
+                                          .gender(gender)
+                                          .status(status)
+                                          .build();
 
         UserData rsBody = new UsersRequest(requestSpecification())
             .createUser(rqBody)
@@ -160,5 +196,15 @@ class UsersServiceTest {
             softly.assertThat(rsBody.getGender()).isEqualTo(rqBody.getGender());
             softly.assertThat(rsBody.getStatus()).isEqualTo(rqBody.getStatus());
         });
+    }
+
+    @ParameterizedTest
+    @MethodSource("userIdDataProvider")
+    void deleteUserTest(int id) {
+        new UsersRequest(requestSpecification())
+            .deleteUserById(id)
+            .then()
+            .spec(responseSpecificationForOkResponse())
+            .statusCode(204);
     }
 }
