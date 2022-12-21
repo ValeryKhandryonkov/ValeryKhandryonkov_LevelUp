@@ -51,6 +51,15 @@ public class UsersRequest {
             .andReturn();
     }
 
+    public Response updateUserById(CreateUserDataRequest body, int id) {
+        return given()
+            .spec(requestSpecification)
+            .body(body)
+            .when()
+            .put(USERS_ENDPOINT + "/" + id)
+            .andReturn();
+    }
+
     public Response deleteUserById(int id) {
         return given()
             .spec(requestSpecification)

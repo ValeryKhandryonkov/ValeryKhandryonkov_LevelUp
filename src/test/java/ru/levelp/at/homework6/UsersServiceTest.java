@@ -16,10 +16,12 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Stream;
 import org.assertj.core.api.SoftAssertions;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import ru.levelp.at.homework6.model.CreateUserDataRequest;
 import ru.levelp.at.homework6.model.UserData;
 import ru.levelp.at.homework6.model.UserData.Genders;
@@ -40,17 +42,6 @@ class UsersServiceTest {
         );
     }
 
-    @Test
-    void testTest() {
-        var users = getUsers();
-        List<String> userIds = new ArrayList<>();
-        for (UserData user : users) {
-            userIds.add(Integer.toString(user.getId()));
-        }
-        System.out.println(userIds.getClass());
-        System.out.println(userIds.get(0).getClass());
-    }
-
     static Stream<Integer> userIdDataProvider() {
         var users = getUsers();
         List<Integer> userIds = new ArrayList<>();
@@ -58,7 +49,7 @@ class UsersServiceTest {
             userIds.add(user.getId());
         }
 
-        return Stream.of(userIds.get(0), userIds.get(1), userIds.get(2));
+        return Stream.of(userIds.get(0), userIds.get(1), userIds.get(2), userIds.get(3));
     }
 
     static Stream<Arguments> parametersForCreatingUsersDataProvider() {
@@ -89,7 +80,7 @@ class UsersServiceTest {
         return new UsersRequest(requestSpecification())
             .getUsers()
             .then()
-            .spec(responseSpecificationForOkResponse())
+            .spec(responseSpecWithCode200())
             .extract()
             .as(UserData[].class);
     }
@@ -98,7 +89,7 @@ class UsersServiceTest {
         return new UsersRequest(requestSpecification())
             .getUsersByParameters(params)
             .then()
-            .spec(responseSpecificationForOkResponse())
+            .spec(responseSpecWithCode200())
             .extract()
             .as(UserData[].class);
     }
@@ -113,9 +104,32 @@ class UsersServiceTest {
             .build();
     }
 
-    static ResponseSpecification responseSpecificationForOkResponse() {
+    static ResponseSpecification responseSpecWithCode200() {
         return new ResponseSpecBuilder()
             .log(LogDetail.ALL)
+            .expectStatusCode(200)
+            .build();
+    }
+
+    static ResponseSpecification responseSpecWithCode201() {
+        return new ResponseSpecBuilder()
+            .log(LogDetail.ALL)
+            .expectStatusCode(201)
+            .build();
+    }
+
+    static ResponseSpecification responseSpecWithCode204() {
+        return new ResponseSpecBuilder()
+            .log(LogDetail.ALL)
+            .expectStatusCode(204)
+            .build();
+    }
+
+    static ResponseSpecification responseSpecWithCode404() {
+        return new ResponseSpecBuilder()
+            .log(LogDetail.ALL)
+            .expectStatusCode(404)
+            .expectBody("message", Matchers.equalTo("Resource not found"))
             .build();
     }
 
@@ -124,8 +138,7 @@ class UsersServiceTest {
         var rsBody = new UsersRequest(requestSpecification())
             .getUsers()
             .then()
-            .spec(responseSpecificationForOkResponse())
-            .statusCode(200)
+            .spec(responseSpecWithCode200())
             .extract()
             .as(UserData[].class);
 
@@ -163,12 +176,20 @@ class UsersServiceTest {
         var rsBody = new UsersRequest(requestSpecification())
             .getUserById(id)
             .then()
-            .spec(responseSpecificationForOkResponse())
-            .statusCode(200)
+            .spec(responseSpecWithCode200())
             .extract()
             .as(UserData.class);
 
         assertThat(rsBody.getId()).isEqualTo(id);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 22, 55555, 6000006})
+    void getNonexistentUserByIdTest(int id) {
+        new UsersRequest(requestSpecification())
+            .getUserById(id)
+            .then()
+            .spec(responseSpecWithCode404());
     }
 
     @ParameterizedTest
@@ -184,8 +205,7 @@ class UsersServiceTest {
         UserData rsBody = new UsersRequest(requestSpecification())
             .createUser(rqBody)
             .then()
-            .spec(responseSpecificationForOkResponse())
-            .statusCode(201)
+            .spec(responseSpecWithCode201())
             .extract()
             .as(UserData.class);
 
@@ -199,12 +219,58 @@ class UsersServiceTest {
     }
 
     @ParameterizedTest
+    @MethodSource({"parametersForCreatingUsersDataProvider"})
+    void updateUserTest(String name, String email, String gender, String status) {
+        var users = getUsers();
+        var userId = users[new Random().nextInt(5)].getId();
+
+        var rqBody = CreateUserDataRequest.builder()
+                                          .name(name)
+                                          .email(email)
+                                          .gender(gender)
+                                          .status(status)
+                                          .build();
+
+        UserData rsBody = new UsersRequest(requestSpecification())
+            .updateUserById(rqBody, userId)
+            .then()
+            .spec(responseSpecWithCode200())
+            .extract()
+            .as(UserData.class);
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(rsBody.getId()).isEqualTo(userId);
+            softly.assertThat(rsBody.getName()).isEqualTo(rqBody.getName());
+            softly.assertThat(rsBody.getEmail()).isEqualTo(rqBody.getEmail());
+            softly.assertThat(rsBody.getGender()).isEqualTo(rqBody.getGender());
+            softly.assertThat(rsBody.getStatus()).isEqualTo(rqBody.getStatus());
+        });
+    }
+
+    @ParameterizedTest
+    @MethodSource({"parametersForCreatingUsersDataProvider"})
+    void updateNonexistentUserTest(String name, String email, String gender, String status) {
+        var userId = new Random().nextInt(888888 + 111111);
+
+        var rqBody = CreateUserDataRequest.builder()
+                                          .name(name)
+                                          .email(email)
+                                          .gender(gender)
+                                          .status(status)
+                                          .build();
+
+        new UsersRequest(requestSpecification())
+            .updateUserById(rqBody, userId)
+            .then()
+            .spec(responseSpecWithCode404());
+    }
+
+    @ParameterizedTest
     @MethodSource("userIdDataProvider")
     void deleteUserTest(int id) {
         new UsersRequest(requestSpecification())
             .deleteUserById(id)
             .then()
-            .spec(responseSpecificationForOkResponse())
-            .statusCode(204);
+            .spec(responseSpecWithCode204());
     }
 }
