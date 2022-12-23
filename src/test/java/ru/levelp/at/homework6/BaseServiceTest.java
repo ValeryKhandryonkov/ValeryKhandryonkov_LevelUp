@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import org.hamcrest.Matchers;
+import ru.levelp.at.homework6.model.CommentData;
 import ru.levelp.at.homework6.model.PostData;
 import ru.levelp.at.homework6.model.UserData;
+import ru.levelp.at.homework6.service.CommentsRequest;
 import ru.levelp.at.homework6.service.PostsRequest;
 import ru.levelp.at.homework6.service.UsersRequest;
 
@@ -77,6 +79,15 @@ public class BaseServiceTest {
             .as(PostData[].class);
     }
 
+    public static CommentData[] getComments() {
+        return new CommentsRequest(requestSpecification())
+            .getComments()
+            .then()
+            .spec(responseSpecWithCode200())
+            .extract()
+            .as(CommentData[].class);
+    }
+
     public static Stream<Integer> userIdDataProvider() {
         var users = getUsers();
         List<Integer> userIds = new ArrayList<>();
@@ -95,5 +106,15 @@ public class BaseServiceTest {
         }
 
         return Stream.of(postIds.get(0), postIds.get(1), postIds.get(2), postIds.get(3));
+    }
+
+    public static Stream<Integer> commentIdDataProvider() {
+        var comments = getComments();
+        List<Integer> commentIds = new ArrayList<>();
+        for (CommentData comment : comments) {
+            commentIds.add(comment.getId());
+        }
+
+        return Stream.of(commentIds.get(0), commentIds.get(1), commentIds.get(2), commentIds.get(3));
     }
 }
