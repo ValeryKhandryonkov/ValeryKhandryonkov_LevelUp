@@ -3,6 +3,8 @@ package ru.levelp.at.homework6;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.javafaker.Faker;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -35,17 +37,16 @@ class PostsServiceTest extends BaseServiceTest {
         var users = getUsers();
         var faker = new Faker();
 
-        return Stream.of(
-            Arguments.of(Integer.toString(users[0].getId()),
+        List<Arguments> postParameters = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            postParameters.add(Arguments.of(
+                Integer.toString(users[i].getId()),
                 faker.lorem().sentence(5),
-                faker.lorem().paragraph()),
-            Arguments.of(Integer.toString(users[1].getId()),
-                faker.lorem().sentence(5),
-                faker.lorem().paragraph()),
-            Arguments.of(Integer.toString(users[2].getId()),
-                faker.lorem().sentence(5),
-                faker.lorem().paragraph())
-        );
+                faker.lorem().paragraph()
+            ));
+        }
+
+        return postParameters.stream();
     }
 
     private PostData[] getPostsByParameters(Map<String, String> params) {
@@ -137,7 +138,7 @@ class PostsServiceTest extends BaseServiceTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"parametersForCreatingPostsDataProvider"})
+    @MethodSource("parametersForCreatingPostsDataProvider")
     void updatePostTest(String userId, String title, String body) {
         var posts = getPosts();
         var postId = posts[new Random().nextInt(5)].getId();
@@ -164,7 +165,7 @@ class PostsServiceTest extends BaseServiceTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"parametersForCreatingPostsDataProvider"})
+    @MethodSource("parametersForCreatingPostsDataProvider")
     void updateNonexistentPostTest(String userId, String title, String body) {
         var postId = new Random().nextInt(888888 + 111111);
 

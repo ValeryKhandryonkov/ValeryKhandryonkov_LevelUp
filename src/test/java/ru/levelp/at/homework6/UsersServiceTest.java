@@ -3,6 +3,8 @@ package ru.levelp.at.homework6;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.javafaker.Faker;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -36,24 +38,17 @@ class UsersServiceTest extends BaseServiceTest {
 
         var faker = new Faker();
 
-        return Stream.of(
-            Arguments.of(faker.name().firstName() + " " + faker.name().lastName(),
+        List<Arguments> userParameters = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            userParameters.add(Arguments.of(
+                faker.name().firstName() + " " + faker.name().lastName(),
                 faker.internet().emailAddress(),
                 Genders.values()[new Random().nextInt(Genders.values().length)].toString(),
-                Statuses.values()[new Random().nextInt(Statuses.values().length)].toString()),
-            Arguments.of(faker.name().firstName() + " " + faker.name().lastName(),
-                faker.internet().emailAddress(),
-                Genders.values()[new Random().nextInt(Genders.values().length)].toString(),
-                Statuses.values()[new Random().nextInt(Statuses.values().length)].toString()),
-            Arguments.of(faker.name().firstName() + " " + faker.name().lastName(),
-                faker.internet().emailAddress(),
-                Genders.values()[new Random().nextInt(Genders.values().length)].toString(),
-                Statuses.values()[new Random().nextInt(Statuses.values().length)].toString()),
-            Arguments.of(faker.name().firstName() + " " + faker.name().lastName(),
-                faker.internet().emailAddress(),
-                Genders.values()[new Random().nextInt(Genders.values().length)].toString(),
-                Statuses.values()[new Random().nextInt(Statuses.values().length)].toString())
-        );
+                Statuses.values()[new Random().nextInt(Statuses.values().length)].toString()
+            ));
+        }
+
+        return userParameters.stream();
     }
 
     private UserData[] getUsersByParameters(Map<String, String> params) {
@@ -151,7 +146,7 @@ class UsersServiceTest extends BaseServiceTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"parametersForCreatingUsersDataProvider"})
+    @MethodSource("parametersForCreatingUsersDataProvider")
     void updateUserTest(String name, String email, String gender, String status) {
         var users = getUsers();
         var userId = users[new Random().nextInt(5)].getId();
@@ -180,7 +175,7 @@ class UsersServiceTest extends BaseServiceTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"parametersForCreatingUsersDataProvider"})
+    @MethodSource("parametersForCreatingUsersDataProvider")
     void updateNonexistentUserTest(String name, String email, String gender, String status) {
         var userId = new Random().nextInt(888888 + 111111);
 

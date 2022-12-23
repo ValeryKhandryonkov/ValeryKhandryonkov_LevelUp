@@ -3,6 +3,8 @@ package ru.levelp.at.homework6;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.javafaker.Faker;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -36,20 +38,17 @@ class CommentsServiceTest extends BaseServiceTest {
         var posts = getPosts();
         var faker = new Faker();
 
-        return Stream.of(
-            Arguments.of(Integer.toString(posts[0].getId()),
+        List<Arguments> commentParameters = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            commentParameters.add(Arguments.of(
+                Integer.toString(posts[i].getId()),
                 faker.name().firstName() + " " + faker.name().lastName(),
                 faker.internet().emailAddress(),
-                faker.lorem().sentence(5)),
-            Arguments.of(Integer.toString(posts[2].getId()),
-                faker.name().firstName() + " " + faker.name().lastName(),
-                faker.internet().emailAddress(),
-                faker.lorem().sentence(5)),
-            Arguments.of(Integer.toString(posts[3].getId()),
-                faker.name().firstName() + " " + faker.name().lastName(),
-                faker.internet().emailAddress(),
-                faker.lorem().sentence(5))
-        );
+                faker.lorem().sentence(5)
+            ));
+        }
+
+        return commentParameters.stream();
     }
 
     private CommentData[] getCommentsByParameters(Map<String, String> params) {
@@ -176,7 +175,7 @@ class CommentsServiceTest extends BaseServiceTest {
     }
 
     @ParameterizedTest
-    @MethodSource({"parametersForCreatingCommentsDataProvider"})
+    @MethodSource("parametersForCreatingCommentsDataProvider")
     void updateNonexistentCommentTest(String postId, String name, String email, String body) {
         var commentId = new Random().nextInt(888888 + 111111);
 
